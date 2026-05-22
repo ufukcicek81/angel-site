@@ -111,9 +111,23 @@
       height:150px;
     }
 
+  
+    /* Admin sade düzen */
+    .admin-tabs{position:sticky;top:0;z-index:20;display:flex;gap:8px;overflow:auto;padding:10px;background:rgba(5,5,5,.92);border-bottom:1px solid rgba(232,199,119,.18);backdrop-filter:blur(12px)}
+    .admin-tab{border:1px solid rgba(232,199,119,.25);background:rgba(255,255,255,.04);color:#f6e5a8;padding:10px 14px;border-radius:999px;font-weight:900;white-space:nowrap;cursor:pointer}.admin-tab.active{background:linear-gradient(135deg,#c99a45,#efd27a);color:#111}.admin-section{display:none}.admin-section.active{display:block}
+    .help-card{border:1px solid rgba(232,199,119,.24);background:rgba(232,199,119,.07);color:#f6e5a8;border-radius:18px;padding:14px 16px;margin:0 0 16px;line-height:1.55}
+    .image-manager{display:grid;gap:14px;margin-top:12px}.image-manager h3{margin:8px 0 0;font-size:18px;color:#f6e5a8}.image-row{display:grid;grid-template-columns:92px 1fr auto;gap:12px;align-items:center;border:1px solid rgba(232,199,119,.18);background:rgba(255,255,255,.035);border-radius:18px;padding:10px}.image-row img{width:92px;height:110px;object-fit:cover;object-position:center top;border-radius:12px;background:#090909}.image-row-title{font-weight:900;color:#fff;margin-bottom:4px}.image-row-url{font-size:11px;color:rgba(255,255,255,.45);word-break:break-all;max-height:36px;overflow:hidden}.image-row button{width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.24);background:#8b1111;color:#fff;font-size:22px;font-weight:900;cursor:pointer}.image-row button:hover{background:#dc2626}.empty-note{border:1px dashed rgba(232,199,119,.22);padding:14px;border-radius:16px;color:rgba(255,255,255,.56)}
+    @media(max-width:760px){.image-row{grid-template-columns:78px 1fr auto}.image-row img{width:78px;height:96px}}
+
   </style>
 </head>
 <body>
+  <div class="admin-tabs" id="adminTabs">
+    <button class="admin-tab active" type="button" data-admin-tab="settings">Site Ayarları</button>
+    <button class="admin-tab" type="button" data-admin-tab="products">Ürünler</button>
+    <button class="admin-tab" type="button" data-admin-tab="images">Görsel Yönetimi</button>
+    <button class="admin-tab" type="button" data-admin-tab="help">Yardım</button>
+  </div>
   <main class="wrap">
     <div class="top">
       <div>
@@ -231,5 +245,19 @@
   </main>
 
   <script type="module" src="./admin.js"></script>
+
+  <section class="card admin-section" id="imageManagerSection" data-section="images">
+    <h2>Görsel Yönetimi</h2>
+    <div class="help-card">Seçili ürünün görsellerini liste halinde görürsün. Silmek istediğin görselin yanındaki × işaretine bas, ardından <strong>Kartı Kaydet</strong>. Ana kapak görseli ayrı yönetilir.</div>
+    <div class="image-manager">
+      <h3>Ürün ana görseli</h3><div id="productImageManager"></div>
+      <h3>Ürün galeri görselleri</h3><div id="galleryImageManager"></div>
+    </div>
+  </section>
+  <section class="card admin-section" id="helpSection" data-section="help">
+    <h2>Kısa Kullanım</h2>
+    <div class="help-card"><strong>Ana kapak:</strong> Site Ayarları bölümünden yüklenir.<br><strong>Ürün ana görseli:</strong> Slider’da görünen ana fotoğraftır.<br><strong>Galeri:</strong> Ürün detay sayfasındaki ek fotoğraflardır.<br>Silince mutlaka <strong>Kaydet</strong> butonuna bas.</div>
+  </section>
+
 </body>
 </html>

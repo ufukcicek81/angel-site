@@ -74,6 +74,8 @@ function renderSettings(data = {}) {
   const visual = qs("#heroVisual");
   const heroImage = qs("#heroImage");
   if (visual && heroImage && currentSettings.hero_gorsel_url) {
+    heroImage.classList.remove("loaded");
+    heroImage.onload = () => heroImage.classList.add("loaded");
     heroImage.src = currentSettings.hero_gorsel_url;
     visual.classList.add("has-image");
   } else if (visual && heroImage) {
@@ -225,7 +227,7 @@ function renderMobileProductSlider(products = []) {
 
     return `
       <a class="mobile-slide" href="${url}">
-        ${img ? `<img src="${img}" alt="${title}" loading="eager">` : ""}
+        ${img ? `<img src="${img}" alt="${title}" loading="eager" onload="this.classList.add('loaded')">` : ""}
         <div class="mobile-slide-info">
           <small>${category}</small>
           <strong>${title}</strong>
@@ -257,7 +259,7 @@ function renderProducts(products = []) {
     const href = p.buton_link || detailUrl(p.id);
     return `
       <article class="feature">
-        <div class="feature-img" onclick='openGallery(${JSON.stringify(galleryImages)})'>${img ? `<img src="${img}" alt="${title}" loading="lazy">` : ""}</div>
+        <div class="feature-img" onclick='openGallery(${JSON.stringify(galleryImages)})'>${img ? `<img src="${img}" alt="${title}" loading="lazy" onload="this.classList.add('loaded')">` : ""}</div>
         <div class="feature-content">
           <small>${String(index + 1).padStart(2, "0")} / ${cat}</small>
           <h3>${title}</h3>

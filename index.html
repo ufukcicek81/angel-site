@@ -1177,7 +1177,13 @@
       }
     }
 
-</style>
+
+    /* Görsel yüklenirken eski/yanlış fotoğraf göstermeme + premium geçiş */
+    .hero-image,.mobile-slide img,.feature-img img{opacity:0;transition:opacity .28s ease;background:#070707;}
+    .hero-image.loaded,.mobile-slide img.loaded,.feature-img img.loaded{opacity:1;}
+    .hero-visual,.mobile-slide,.feature-img{background:radial-gradient(circle at 55% 38%,rgba(201,154,69,.16),transparent 28%),linear-gradient(135deg,#050505,#14100c)!important;}
+
+  </style>
 </head>
 <body>
   <header class="nav">
@@ -1390,6 +1396,11 @@
       document.addEventListener('DOMContentLoaded', moveHeroVisualMobile);
       window.addEventListener('resize', moveHeroVisualMobile);
     })();
+  </script>
+
+
+  <script>
+    document.addEventListener("load",function(e){if(e.target&&e.target.tagName==="IMG"){e.target.classList.add("loaded");}},true);
   </script>
 
 </body>

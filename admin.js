@@ -123,6 +123,7 @@ function clearProductForm() {
   setVal("gorsel_url", "");
   setVal("galeri_urls", "");
   renderAllImagePreviews();
+    renderImageManagers();
   const productPreview = $("productPreview");
   if (productPreview) {
     productPreview.src = "";
@@ -422,6 +423,7 @@ function bindGalleryUploadButton() {
           const url = await uploadFileToCloudinary(files[i], msgBox);
           appendLineToTextarea("galeri_urls", url);
           renderGalleryPreview();
+          renderImageManagers();
           success++;
         } catch (err) {
           console.error("Galeri yükleme hatası:", err);
@@ -472,6 +474,7 @@ function bindImageCleanButtons() {
       if (!confirm("Bu ürünün ana görseli temizlensin mi? Sonra Kartı Kaydet demen gerekir.")) return;
       setVal("gorsel_url", "");
       renderProductImagePreview();
+        renderImageManagers();
       msg(refs.productMsg, "Ürün ana görseli temizlendi. Kalıcı olması için Kartı Kaydet.");
     });
   }
@@ -693,9 +696,38 @@ function renderAllImagePreviews() {
 document.addEventListener("input", (e) => {
   if (e.target && (e.target.id === "gorsel_url" || e.target.id === "galeri_urls")) {
     renderAllImagePreviews();
+    renderImageManagers();
   }
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(renderAllImagePreviews, 400);
 });
+
+
+
+function setupAdminTabs(){
+  const tabs=document.querySelectorAll("[data-admin-tab]"); if(!tabs.length)return;
+  function show(tab){
+    tabs.forEach(t=>t.classList.toggle("active",t.dataset.adminTab===tab));
+    document.querySelectorAll(".admin-section").forEach(s=>s.classList.toggle("active",s.dataset.section===tab));
+    const cards=[...document.querySelectorAll(".card")].filter(c=>!c.classList.contains("admin-section"));
+    cards.forEach(card=>{const tx=(card.textContent||"").toLowerCase(); if(tab==="settings") card.style.display=(tx.includes("site")||tx.includes("ayar")||tx.includes("kapak")||tx.includes("whatsapp"))?"":"none"; else if(tab==="products") card.style.display=(tx.includes("ürün")||tx.includes("kart")||tx.includes("galeri"))?"":"none"; else card.style.display="none";});
+    setTimeout(renderImageManagers,80);
+  }
+  tabs.forEach(t=>t.addEventListener("click",()=>show(t.dataset.adminTab))); show("settings");
+}
+function imageLines(v){return v?String(v).split(/\n|,/).map(x=>x.trim()).filter(Boolean):[];}
+function renderImageManagers(){
+  const pb=$("productImageManager"), gb=$("galleryImageManager"); if(!pb||!gb)return;
+  const purl=val("gorsel_url");
+  if(purl){pb.innerHTML=`<div class="image-row"><img src="${purl}" alt="Ürün ana görseli"><div><div class="image-row-title">Ürün ana görseli</div><div class="image-row-url">${purl}</div></div><button type="button" id="removeProductFromManager">×</button></div>`; $("removeProductFromManager")?.addEventListener("click",()=>{if(!confirm("Ürün ana görseli silinsin mi? Sonra Kartı Kaydet."))return; setVal("gorsel_url",""); if(typeof renderAllImagePreviews==="function")renderAllImagePreviews();
+    renderImageManagers(); renderImageManagers(); msg(refs.productMsg,"Ürün ana görseli kaldırıldı. Kartı Kaydet.");});}
+  else pb.innerHTML=`<div class="empty-note">Ürün ana görseli yok.</div>`;
+  const gallery=imageLines(val("galeri_urls")); if(!gallery.length){gb.innerHTML=`<div class="empty-note">Galeri görseli yok.</div>`;return;}
+  gb.innerHTML=gallery.map((url,i)=>`<div class="image-row"><img src="${url}" alt="Galeri ${i+1}"><div><div class="image-row-title">Galeri görseli ${i+1}</div><div class="image-row-url">${url}</div></div><button type="button" data-manager-remove="${i}">×</button></div>`).join("");
+  gb.querySelectorAll("[data-manager-remove]").forEach(btn=>btn.addEventListener("click",()=>{const i=Number(btn.dataset.managerRemove); const list=imageLines(val("galeri_urls")); if(!list[i])return; if(!confirm("Bu galeri görseli silinsin mi? Sonra Kartı Kaydet."))return; list.splice(i,1); setVal("galeri_urls",list.join("\n")); if(typeof renderAllImagePreviews==="function")renderAllImagePreviews();
+    renderImageManagers(); renderImageManagers(); msg(refs.productMsg,"Galeri görseli kaldırıldı. Kartı Kaydet.");}));
+}
+document.addEventListener("DOMContentLoaded",()=>{setupAdminTabs();setTimeout(renderImageManagers,600);});
+document.addEventListener("input",e=>{if(e.target&&(e.target.id==="gorsel_url"||e.target.id==="galeri_urls"))setTimeout(renderImageManagers,50);});
