@@ -1334,6 +1334,79 @@
       }
     }
 
+  
+    /* Slider okları, noktaları ve otomatik vitrin hissi */
+    .slider-shell{
+      position:relative;
+      width:min(1420px,96%);
+      margin:0 auto;
+    }
+    .slider-shell .mobile-product-slider{
+      width:100% !important;
+      margin:0 !important;
+    }
+    .slider-arrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:10;
+      width:48px;
+      height:48px;
+      border-radius:999px;
+      border:1px solid rgba(232,199,119,.45);
+      background:rgba(0,0,0,.62);
+      color:#f6e5a8;
+      font-size:42px;
+      line-height:38px;
+      font-weight:300;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      box-shadow:0 14px 40px rgba(0,0,0,.32);
+    }
+    .slider-arrow:hover{
+      background:linear-gradient(135deg,#c99a45,#efd27a);
+      color:#111;
+    }
+    .slider-prev{left:14px}
+    .slider-next{right:14px}
+    .slider-dots{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin:12px 0 0;
+    }
+    .slider-dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      border:0;
+      background:rgba(232,199,119,.34);
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .slider-dot.active{
+      width:26px;
+      background:#efd27a;
+    }
+    @media(max-width:720px){
+      .slider-shell{
+        width:100% !important;
+      }
+      .slider-arrow{
+        width:42px;
+        height:42px;
+        font-size:36px;
+        background:rgba(0,0,0,.50);
+      }
+      .slider-prev{left:8px}
+      .slider-next{right:8px}
+      .slider-dots{
+        margin:10px 0 0;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1350,7 +1423,12 @@
       <span>ÖNE ÇIKAN TASARIMLAR</span>
       <small>Resme dokun, detayları incele</small>
     </div>
-    <div class="mobile-product-slider" id="mobileProductSlider"></div>
+    <div class="slider-shell">
+      <button class="slider-arrow slider-prev" id="sliderPrevBtn" type="button" aria-label="Önceki ürün">‹</button>
+      <div class="mobile-product-slider" id="mobileProductSlider"></div>
+      <button class="slider-arrow slider-next" id="sliderNextBtn" type="button" aria-label="Sonraki ürün">›</button>
+    </div>
+    <div class="slider-dots" id="sliderDots"></div>
   </section>
 
   <section class="hero" id="heroSection">
