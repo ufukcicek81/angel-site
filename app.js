@@ -85,7 +85,10 @@ function renderSettings(data = {}) {
     link.href = waUrl();
   });
 
-  if (lastProductsForRender.length) setupHeroProductLink(lastProductsForRender);
+  if (lastProductsForRender.length) {
+    setupHeroProductLink(lastProductsForRender);
+    renderMobileProductSlider(lastProductsForRender);
+  }
 
   if (lastProductsForRender.length) renderProducts(lastProductsForRender);
 }
@@ -198,7 +201,43 @@ document.addEventListener("keydown", (e) => {
 });
 
 
+
+function firstProductImage(product) {
+  const images = [product.gorsel_url, ...parseImages(product.galeri_urls)].filter(Boolean);
+  return images[0] || currentSettings.hero_gorsel_url || "";
+}
+
+function renderMobileProductSlider(products = []) {
+  const slider = qs("#mobileProductSlider");
+  if (!slider) return;
+
+  const active = products.filter(p => p.aktif !== false);
+  if (!active.length) {
+    slider.innerHTML = "";
+    return;
+  }
+
+  slider.innerHTML = active.map(p => {
+    const img = firstProductImage(p);
+    const title = safe(p.ad || "Özel Dikim Elbise");
+    const category = safe((p.kategori || "Özel Tasarım").toUpperCase());
+    const url = detailUrl(p.id);
+
+    return `
+      <a class="mobile-slide" href="${url}">
+        ${img ? `<img src="${img}" alt="${title}" loading="eager">` : ""}
+        <div class="mobile-slide-info">
+          <small>${category}</small>
+          <strong>${title}</strong>
+          <span>Detayları incele →</span>
+        </div>
+      </a>
+    `;
+  }).join("");
+}
+
 function renderProducts(products = []) {
+  renderMobileProductSlider(products);
   lastProductsForRender = products;
   setupHeroProductLink(products);
   lastProductsForRender = products;
