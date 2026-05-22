@@ -38,6 +38,9 @@
     input[type="file"]{padding:10px;background:#0b0b0b}
     .preview{margin-top:10px;max-width:180px;border-radius:14px;border:1px solid var(--line);display:none}
 
+  
+    .multi-upload{display:grid;gap:10px}
+
   </style>
 </head>
 <body>
@@ -116,6 +119,15 @@
             </div>
             <input id="productUploadFile" type="file" accept="image/*">
             <img id="productPreview" class="preview" alt="Kart görseli önizleme">
+          </label>
+          <label class="full">
+            Ek görseller / galeri
+            <span class="hint">Her satıra 1 görsel URL. Fotoğraf seçip yükledikçe buraya otomatik eklenir.</span>
+            <div class="multi-upload">
+              <textarea id="galeri_urls" placeholder="Her satıra bir görsel URL"></textarea>
+              <input id="galleryUploadFile" type="file" accept="image/*">
+              <button class="btn dark" type="button" id="galleryUploadBtn">Galeri Fotoğrafı Yükle</button>
+            </div>
           </label>
           <label>Buton / fiyat yazısı<input id="fiyat_notu" placeholder="Teklif al"></label>
           <label>Buton linki<input id="buton_link" placeholder="Boş kalırsa WhatsApp"></label>

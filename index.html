@@ -517,6 +517,107 @@
       display:block;
     }
 
+  
+    /* Ürün kartı görsel kesin görünürlük */
+    .feature-img{
+      min-height:420px !important;
+      overflow:hidden !important;
+    }
+    .feature-img img{
+      display:block !important;
+      width:100% !important;
+      height:100% !important;
+      min-height:420px !important;
+      object-fit:cover !important;
+      object-position:center top !important;
+    }
+
+  
+    /* Ürün galeri / büyütme */
+    .feature-img{cursor:pointer;position:relative}
+    .feature-img:after{
+      content:"Fotoğrafları gör";
+      position:absolute;
+      left:14px;
+      bottom:14px;
+      background:rgba(0,0,0,.72);
+      color:#fff;
+      border:1px solid rgba(232,199,119,.45);
+      border-radius:999px;
+      padding:8px 13px;
+      font-size:12px;
+      font-weight:800;
+      opacity:.92;
+    }
+    .gallery-modal{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      background:rgba(0,0,0,.92);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .gallery-modal.open{display:flex}
+    .gallery-box{
+      width:min(980px,96vw);
+      height:min(760px,88vh);
+      display:grid;
+      grid-template-rows:1fr auto;
+      gap:14px;
+    }
+    .gallery-photo-wrap{
+      position:relative;
+      background:#050505;
+      border:1px solid rgba(232,199,119,.28);
+      border-radius:22px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .gallery-photo{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:#050505;
+    }
+    .gallery-close,.gallery-prev,.gallery-next{
+      position:absolute;
+      border:0;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      color:#fff;
+      width:46px;
+      height:46px;
+      font-size:26px;
+      font-weight:900;
+      cursor:pointer;
+      backdrop-filter:blur(8px);
+    }
+    .gallery-close{right:14px;top:14px}
+    .gallery-prev{left:14px;top:50%;transform:translateY(-50%)}
+    .gallery-next{right:14px;top:50%;transform:translateY(-50%)}
+    .gallery-thumbs{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding:4px;
+    }
+    .gallery-thumbs img{
+      width:72px;
+      height:92px;
+      object-fit:cover;
+      border-radius:12px;
+      border:2px solid transparent;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .gallery-thumbs img.active{
+      border-color:var(--gold2);
+    }
+
   </style>
 </head>
 <body>
@@ -689,5 +790,18 @@
       window.open("https://wa.me/" + (window.ANGEL_WHATSAPP_NUMBER || WHATSAPP_NUMBER) + "?text=" + message, "_blank");
     });
   </script>
+
+  <div class="gallery-modal" id="galleryModal">
+    <div class="gallery-box">
+      <div class="gallery-photo-wrap">
+        <button class="gallery-close" id="galleryClose" aria-label="Kapat">×</button>
+        <button class="gallery-prev" id="galleryPrev" aria-label="Önceki">‹</button>
+        <img class="gallery-photo" id="galleryPhoto" alt="Ürün görseli">
+        <button class="gallery-next" id="galleryNext" aria-label="Sonraki">›</button>
+      </div>
+      <div class="gallery-thumbs" id="galleryThumbs"></div>
+    </div>
+  </div>
+
 </body>
 </html>

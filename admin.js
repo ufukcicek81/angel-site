@@ -116,6 +116,7 @@ function clearProductForm() {
   setVal("kategori", "");
   setVal("aciklama", "");
   setVal("gorsel_url", "");
+  setVal("galeri_urls", "");
   const productPreview = $("productPreview");
   if (productPreview) {
     productPreview.src = "";
@@ -229,6 +230,7 @@ refs.productForm.addEventListener("submit", async (e) => {
       kategori: val("kategori"),
       aciklama: val("aciklama"),
       gorsel_url: val("gorsel_url"),
+      galeri_urls: val("galeri_urls"),
       fiyat_notu: val("fiyat_notu"),
       buton_text: val("fiyat_notu"),
       buton_link: val("buton_link"),
@@ -264,6 +266,7 @@ refs.productList.addEventListener("click", async (e) => {
     setVal("kategori", p.kategori || "");
     setVal("aciklama", p.aciklama || "");
     setVal("gorsel_url", p.gorsel_url || "");
+    setVal("galeri_urls", p.galeri_urls || "");
     const productPreview = $("productPreview");
     if (productPreview && p.gorsel_url) {
       productPreview.src = p.gorsel_url;
@@ -289,6 +292,47 @@ if (heroUploadBtn) {
     uploadToCloudinary($("heroUploadFile")?.files?.[0], "hero_gorsel_url", "heroPreview", heroUploadBtn);
   });
 }
+
+
+const galleryUploadBtn = $("galleryUploadBtn");
+if (galleryUploadBtn) {
+  galleryUploadBtn.addEventListener("click", async () => {
+    const file = $("galleryUploadFile")?.files?.[0];
+    if (!file) {
+      alert("Önce bir galeri fotoğrafı seç.");
+      return;
+    }
+
+    const oldText = galleryUploadBtn.textContent;
+    galleryUploadBtn.textContent = "Yükleniyor...";
+    galleryUploadBtn.disabled = true;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("folder", "angelprive");
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok || !data.secure_url) throw new Error(data.error?.message || "Yükleme hatası");
+
+      const current = val("galeri_urls");
+      setVal("galeri_urls", current ? current + "\\n" + data.secure_url : data.secure_url);
+      alert("Galeri fotoğrafı eklendi. Kartı Kaydet butonuna bas.");
+    } catch (err) {
+      console.error(err);
+      alert("Galeri fotoğrafı yüklenemedi: " + err.message);
+    } finally {
+      galleryUploadBtn.textContent = oldText || "Galeri Fotoğrafı Yükle";
+      galleryUploadBtn.disabled = false;
+    }
+  });
+}
+
 
 const productUploadBtn = $("productUploadBtn");
 if (productUploadBtn) {

@@ -20,6 +20,7 @@ const DEFAULTS = {
 };
 
 let currentSettings = { ...DEFAULTS };
+let lastProductsForRender = [];
 
 function qs(selector) {
   return document.querySelector(selector);
@@ -83,6 +84,8 @@ function renderSettings(data = {}) {
   qsa(".wa-link").forEach(link => {
     link.href = waUrl();
   });
+
+  if (lastProductsForRender.length) renderProducts(lastProductsForRender);
 }
 
 function safe(value = "") {
@@ -94,7 +97,79 @@ function safe(value = "") {
     .replaceAll("'", "&#039;");
 }
 
+
+let activeGallery = [];
+let activeGalleryIndex = 0;
+
+function parseImages(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (!value) return [];
+  return String(value)
+    .split(/\n|,/)
+    .map(x => x.trim())
+    .filter(Boolean);
+}
+
+function openGallery(images, startIndex = 0) {
+  activeGallery = images.filter(Boolean);
+  if (!activeGallery.length) return;
+  activeGalleryIndex = Math.max(0, Math.min(startIndex, activeGallery.length - 1));
+
+  const modal = document.getElementById("galleryModal");
+  const photo = document.getElementById("galleryPhoto");
+  const thumbs = document.getElementById("galleryThumbs");
+
+  if (!modal || !photo || !thumbs) return;
+
+  function draw() {
+    photo.src = activeGallery[activeGalleryIndex];
+    thumbs.innerHTML = activeGallery.map((src, i) =>
+      `<img src="${src}" class="${i === activeGalleryIndex ? "active" : ""}" data-gallery-thumb="${i}" alt="Ürün görseli ${i + 1}">`
+    ).join("");
+  }
+
+  draw();
+  modal.classList.add("open");
+
+  thumbs.onclick = (e) => {
+    const img = e.target.closest("[data-gallery-thumb]");
+    if (!img) return;
+    activeGalleryIndex = Number(img.dataset.galleryThumb);
+    draw();
+  };
+}
+
+function closeGallery() {
+  const modal = document.getElementById("galleryModal");
+  if (modal) modal.classList.remove("open");
+}
+
+function moveGallery(step) {
+  if (!activeGallery.length) return;
+  activeGalleryIndex = (activeGalleryIndex + step + activeGallery.length) % activeGallery.length;
+  const photo = document.getElementById("galleryPhoto");
+  const thumbs = document.getElementById("galleryThumbs");
+  if (photo) photo.src = activeGallery[activeGalleryIndex];
+  if (thumbs) {
+    thumbs.querySelectorAll("img").forEach((img, i) => img.classList.toggle("active", i === activeGalleryIndex));
+  }
+}
+
+document.addEventListener("click", (e) => {
+  if (e.target?.id === "galleryClose" || e.target?.id === "galleryModal") closeGallery();
+  if (e.target?.id === "galleryPrev") moveGallery(-1);
+  if (e.target?.id === "galleryNext") moveGallery(1);
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeGallery();
+  if (e.key === "ArrowLeft") moveGallery(-1);
+  if (e.key === "ArrowRight") moveGallery(1);
+});
+
+
 function renderProducts(products = []) {
+  lastProductsForRender = products;
   const grid = qs("#productGrid");
   if (!grid || !products.length) return;
 
@@ -106,11 +181,12 @@ function renderProducts(products = []) {
     const cat = safe(p.kategori || "Özel Dikim");
     const desc = safe(p.aciklama || "Kişiye özel ölçü ve tasarım ile hazırlanır.");
     const price = safe(p.fiyat_notu || p.buton_text || "Bilgi Al");
-    const img = p.gorsel_url || "";
+    const galleryImages = [p.gorsel_url, ...parseImages(p.galeri_urls), currentSettings.hero_gorsel_url].filter(Boolean);
+    const img = galleryImages[0] || "";
     const href = p.buton_link || waUrl(`${p.ad || "Özel dikim kıyafet"} hakkında bilgi almak istiyorum.`);
     return `
       <article class="feature">
-        <div class="feature-img">${img ? `<img src="${img}" alt="${title}">` : ""}</div>
+        <div class="feature-img" onclick='openGallery(${JSON.stringify(galleryImages)})'>${img ? `<img src="${img}" alt="${title}" loading="lazy">` : ""}</div>
         <div class="feature-content">
           <small>${String(index + 1).padStart(2, "0")} / ${cat}</small>
           <h3>${title}</h3>
