@@ -347,7 +347,9 @@ function renderMobileProductSlider(products = []) {
   }).join("");
 
   
-  setTimeout(initAngelPriveSlider, 80);
+  
+  setTimeout(initAngelPriveSliderStable, 120);
+setTimeout(initAngelPriveSlider, 80);
 setupHomeProductSliderControls();
 }
 
@@ -523,3 +525,142 @@ function initAngelPriveSlider() {
 
   setDots();
 }
+
+
+
+// Desktop ve mobil slider okları için kesin çalışan sürüm
+let apStableSliderTimer = null;
+let apStableSliderPauseUntil = 0;
+
+function initAngelPriveSliderStable() {
+  const slider = document.getElementById("mobileProductSlider");
+  const prev = document.getElementById("sliderPrevBtn");
+  const next = document.getElementById("sliderNextBtn");
+  const dots = document.getElementById("sliderDots");
+
+  if (!slider || !dots) return;
+
+  const slides = Array.from(slider.querySelectorAll(".mobile-slide"));
+  if (!slides.length) {
+    dots.innerHTML = "";
+    if (prev) prev.style.display = "none";
+    if (next) next.style.display = "none";
+    return;
+  }
+
+  if (prev) {
+    prev.style.display = slides.length > 1 ? "flex" : "none";
+    prev.innerHTML = "<span>‹</span>";
+    prev.style.pointerEvents = "auto";
+  }
+
+  if (next) {
+    next.style.display = slides.length > 1 ? "flex" : "none";
+    next.innerHTML = "<span>›</span>";
+    next.style.pointerEvents = "auto";
+  }
+
+  dots.innerHTML = slides.map((_, i) =>
+    `<button class="slider-dot ${i === 0 ? "active" : ""}" type="button" data-ap-stable-dot="${i}" aria-label="Ürün ${i + 1}"></button>`
+  ).join("");
+
+  let currentIndex = 0;
+
+  function nearestIndex() {
+    const center = slider.scrollLeft + slider.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+
+    slides.forEach((slide, i) => {
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      const dist = Math.abs(center - slideCenter);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+
+    return best;
+  }
+
+  function updateIndexFromScroll() {
+    currentIndex = nearestIndex();
+    dots.querySelectorAll(".slider-dot").forEach((dot, i) => {
+      dot.classList.toggle("active", i === currentIndex);
+    });
+  }
+
+  function goTo(index, smooth = true) {
+    if (!slides.length) return;
+
+    currentIndex = (index + slides.length) % slides.length;
+    const target = slides[currentIndex];
+
+    slider.scrollTo({
+      left: target.offsetLeft,
+      behavior: smooth ? "smooth" : "auto"
+    });
+
+    setTimeout(updateIndexFromScroll, smooth ? 420 : 60);
+  }
+
+  function pauseAuto() {
+    apStableSliderPauseUntil = Date.now() + 6500;
+  }
+
+  if (prev) {
+    prev.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      pauseAuto();
+      updateIndexFromScroll();
+      goTo(currentIndex - 1);
+    };
+  }
+
+  if (next) {
+    next.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      pauseAuto();
+      updateIndexFromScroll();
+      goTo(currentIndex + 1);
+    };
+  }
+
+  dots.querySelectorAll("[data-ap-stable-dot]").forEach(dot => {
+    dot.onclick = function(e) {
+      e.preventDefault();
+      pauseAuto();
+      goTo(Number(dot.dataset.apStableDot));
+    };
+  });
+
+  if (slider.dataset.apStableBound !== "1") {
+    slider.dataset.apStableBound = "1";
+    slider.addEventListener("scroll", () => {
+      clearTimeout(slider.__apStableTimer);
+      slider.__apStableTimer = setTimeout(updateIndexFromScroll, 90);
+    }, { passive:true });
+
+    slider.addEventListener("touchstart", pauseAuto, { passive:true });
+    slider.addEventListener("pointerdown", pauseAuto, { passive:true });
+  }
+
+  if (apStableSliderTimer) clearInterval(apStableSliderTimer);
+  if (slides.length > 1) {
+    apStableSliderTimer = setInterval(() => {
+      if (Date.now() < apStableSliderPauseUntil) return;
+      updateIndexFromScroll();
+      goTo(currentIndex + 1);
+    }, 3000);
+  }
+
+  updateIndexFromScroll();
+}
+
+// Eski fonksiyon çağrıları varsa bunu da aynı sağlam fonksiyona yönlendir.
+window.initAngelPriveSliderStable = initAngelPriveSliderStable;
+
+
+document.addEventListener('DOMContentLoaded', () => setTimeout(initAngelPriveSliderStable, 500));

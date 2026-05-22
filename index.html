@@ -1491,6 +1491,45 @@
       .slider-next{right:10px !important}
     }
 
+  
+    /* Desktop slider ok tıklama kesin çözüm */
+    .slider-shell{
+      position:relative !important;
+      isolation:isolate !important;
+    }
+    .slider-arrow{
+      pointer-events:auto !important;
+      user-select:none !important;
+      z-index:999 !important;
+    }
+    .slider-prev,
+    .slider-next{
+      pointer-events:auto !important;
+    }
+    .mobile-product-slider{
+      position:relative !important;
+      z-index:1 !important;
+    }
+    .mobile-slide{
+      position:relative !important;
+      z-index:2 !important;
+    }
+    @media(min-width:721px){
+      .slider-prev{
+        left:24px !important;
+      }
+      .slider-next{
+        right:24px !important;
+      }
+      .slider-arrow{
+        width:58px !important;
+        height:58px !important;
+      }
+      .slider-arrow span{
+        font-size:48px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
