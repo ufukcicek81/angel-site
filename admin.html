@@ -41,7 +41,17 @@
   
     .multi-upload{display:grid;gap:10px}
 
-  </style>
+  
+    .notice{
+      border:1px solid rgba(232,199,119,.28);
+      background:rgba(232,199,119,.08);
+      color:#f6e5a8;
+      border-radius:18px;
+      padding:14px 16px;
+      margin:0 0 18px;
+      line-height:1.5;
+    }
+        </style>
 </head>
 <body>
   <main class="wrap">
@@ -91,6 +101,7 @@
             <span class="hint">Sadece 1 adet kapak fotoğrafı. Önerilen: yatay 1600x1000 veya 1600x1200 px</span>
             <div class="upload-row">
               <input id="hero_gorsel_url" placeholder="Yükleme sonrası URL otomatik gelir">
+              <button class="btn dark" type="button" id="clearHeroImageBtn">Ana Kapak Görselini Temizle</button>
               <button class="btn dark" type="button" id="heroUploadBtn">Fotoğraf Yükle</button>
             </div>
             <input id="heroUploadFile" type="file" accept="image/*">
@@ -122,6 +133,7 @@
             <span class="hint">Önerilen: dikey 900x1200 px, kıyafet ortada ve biraz boşluklu olsun</span>
             <div class="upload-row">
               <input id="gorsel_url" placeholder="Yükleme sonrası URL otomatik gelir">
+              <button class="btn dark" type="button" id="clearProductImageBtn">Ürün Ana Görselini Temizle</button>
               <button class="btn dark" type="button" id="productUploadBtn">Fotoğraf Yükle</button>
             </div>
             <input id="productUploadFile" type="file" accept="image/*">
@@ -132,8 +144,9 @@
             <span class="hint">Birden fazla fotoğraf seçebilirsin. Yüklenen her fotoğraf otomatik olarak listeye eklenir.</span>
             <div class="multi-upload">
               <textarea id="galeri_urls" placeholder="Her satıra bir görsel URL"></textarea>
-              <input id="galleryUploadFile" type="file" accept="image/*" multiple>
+              <input id="galleryUploadFile" type="file" accept="image/*" multiple multiple>
               <button class="btn dark" type="button" id="galleryUploadBtn">Seçili Galeri Fotoğraflarını Yükle</button>
+              <button class="btn dark" type="button" id="clearGalleryBtn">Galeri Listesini Temizle</button>
             </div>
           </label>
           <label>Buton / fiyat yazısı<input id="fiyat_notu" placeholder="Teklif al"></label>

@@ -204,7 +204,7 @@ document.addEventListener("keydown", (e) => {
 
 function firstProductImage(product) {
   const images = [product.gorsel_url, ...parseImages(product.galeri_urls)].filter(Boolean);
-  return images[0] || currentSettings.hero_gorsel_url || "";
+  return images[0] || "";
 }
 
 function renderMobileProductSlider(products = []) {
