@@ -346,11 +346,14 @@ function renderMobileProductSlider(products = []) {
     `;
   }).join("");
 
-  setupHomeProductSliderControls();
+  
+  setTimeout(initAngelPriveSlider, 80);
+setupHomeProductSliderControls();
 }
 
 function renderProducts(products = []) {
   renderMobileProductSlider(products);
+  setTimeout(initAngelPriveSlider, 250);
   lastProductsForRender = products;
   setupHeroProductLink(products);
   lastProductsForRender = products;
@@ -397,3 +400,126 @@ onSnapshot(productsQuery, (snapshot) => {
 }, (error) => {
   console.warn("Ürünler okunamadı:", error);
 });
+
+
+
+// Premium stabil slider: ürünler Firebase'den geldikten sonra kesin çalışır
+let apSliderTimer = null;
+let apSliderPauseUntil = 0;
+
+function initAngelPriveSlider() {
+  const slider = document.getElementById("mobileProductSlider");
+  const prev = document.getElementById("sliderPrevBtn");
+  const next = document.getElementById("sliderNextBtn");
+  const dots = document.getElementById("sliderDots");
+
+  if (!slider || !dots) return;
+
+  const slides = Array.from(slider.querySelectorAll(".mobile-slide"));
+  if (!slides.length) {
+    dots.innerHTML = "";
+    if (prev) prev.style.display = "none";
+    if (next) next.style.display = "none";
+    return;
+  }
+
+  if (prev) {
+    prev.style.display = slides.length > 1 ? "flex" : "none";
+    if (!prev.innerHTML.trim()) prev.innerHTML = "<span>‹</span>";
+  }
+  if (next) {
+    next.style.display = slides.length > 1 ? "flex" : "none";
+    if (!next.innerHTML.trim()) next.innerHTML = "<span>›</span>";
+  }
+
+  dots.innerHTML = slides.map((_, i) =>
+    `<button class="slider-dot ${i === 0 ? "active" : ""}" type="button" data-ap-dot="${i}" aria-label="Ürün ${i + 1}"></button>`
+  ).join("");
+
+  function activeIndex() {
+    const center = slider.scrollLeft + slider.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+
+    slides.forEach((slide, i) => {
+      const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+      const dist = Math.abs(center - slideCenter);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = i;
+      }
+    });
+
+    return best;
+  }
+
+  function setDots() {
+    const index = activeIndex();
+    dots.querySelectorAll(".slider-dot").forEach((dot, i) => {
+      dot.classList.toggle("active", i === index);
+    });
+  }
+
+  function go(index, smooth = true) {
+    if (!slides.length) return;
+    const safe = (index + slides.length) % slides.length;
+    slider.scrollTo({
+      left: slides[safe].offsetLeft,
+      behavior: smooth ? "smooth" : "auto"
+    });
+    setTimeout(setDots, smooth ? 420 : 40);
+  }
+
+  function pause() {
+    apSliderPauseUntil = Date.now() + 6500;
+  }
+
+  if (prev && prev.dataset.apBound !== "1") {
+    prev.dataset.apBound = "1";
+    prev.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      pause();
+      go(activeIndex() - 1);
+    });
+  }
+
+  if (next && next.dataset.apBound !== "1") {
+    next.dataset.apBound = "1";
+    next.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      pause();
+      go(activeIndex() + 1);
+    });
+  }
+
+  dots.querySelectorAll("[data-ap-dot]").forEach(dot => {
+    dot.addEventListener("click", () => {
+      pause();
+      go(Number(dot.dataset.apDot));
+    });
+  });
+
+  if (slider.dataset.apScrollBound !== "1") {
+    slider.dataset.apScrollBound = "1";
+    slider.addEventListener("scroll", () => {
+      clearTimeout(slider.__apDotTimer);
+      slider.__apDotTimer = setTimeout(setDots, 90);
+    }, { passive:true });
+
+    slider.addEventListener("touchstart", pause, { passive:true });
+    slider.addEventListener("pointerdown", pause, { passive:true });
+    slider.addEventListener("mouseenter", pause);
+  }
+
+  if (apSliderTimer) clearInterval(apSliderTimer);
+  if (slides.length > 1) {
+    apSliderTimer = setInterval(() => {
+      if (Date.now() < apSliderPauseUntil) return;
+      go(activeIndex() + 1);
+    }, 3000);
+  }
+
+  setDots();
+}
