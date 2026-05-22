@@ -473,6 +473,50 @@
       background-position:center top !important;
     }
 
+  
+    /* KESİN ÇÖZÜM: Firebase verisi gelmeden hiçbir eski fotoğraf gösterme */
+    .hero-visual{
+      background-image:none !important;
+      background:radial-gradient(circle at 70% 25%,rgba(201,154,69,.16),transparent 28%),linear-gradient(135deg,#050505,#17120d) !important;
+    }
+    .feature-img{
+      background-image:none !important;
+      background:radial-gradient(circle at 50% 20%,rgba(201,154,69,.16),transparent 30%),linear-gradient(135deg,#0a0a0a,#1b1510) !important;
+    }
+    .feature-img.has-image{
+      background-size:cover !important;
+      background-position:center top !important;
+    }
+
+  
+    /* Kesin çözüm: görseller background değil gerçek IMG olarak yüklenir */
+    .hero-visual{
+      background:radial-gradient(circle at 70% 25%,rgba(201,154,69,.16),transparent 28%),linear-gradient(135deg,#050505,#17120d) !important;
+      position:relative;
+    }
+    .hero-image{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center top;
+      display:none;
+      border-radius:inherit;
+    }
+    .hero-visual.has-image .hero-image{
+      display:block;
+    }
+    .feature-img{
+      background:radial-gradient(circle at 50% 20%,rgba(201,154,69,.16),transparent 30%),linear-gradient(135deg,#0a0a0a,#1b1510) !important;
+      overflow:hidden;
+    }
+    .feature-img img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center top;
+      display:block;
+    }
+
   </style>
 </head>
 <body>
@@ -494,7 +538,7 @@
             <a class="btn btn-dark" href="https://wa.me/905000000000" target="_blank" class="wa-link">WhatsApp ile Görüş</a>
           </div>
         </div>
-        <div class="hero-visual" id="heroVisual">
+        <div class="hero-visual" id="heroVisual"><img id="heroImage" class="hero-image" alt="Angel Privé özel dikim kıyafet görseli">
         </div>
       </div>
     </section>
