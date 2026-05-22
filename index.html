@@ -688,6 +688,32 @@
       }
     }
 
+  
+    /* Mobil ana ekran sırası: Logo -> görsel -> başlık */
+    @media(max-width:720px){
+      .hero-inner{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:18px !important;
+      }
+      .hero-visual{
+        order:1 !important;
+        width:100% !important;
+        min-height:430px !important;
+      }
+      .hero-copy{
+        order:2 !important;
+      }
+      .hero-product-badge{
+        bottom:12px !important;
+      }
+    }
+    @media(min-width:721px){
+      .hero-inner{
+        align-items:center !important;
+      }
+    }
+
   </style>
 </head>
 <body>

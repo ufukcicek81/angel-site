@@ -87,14 +87,14 @@
           <label class="full">Ana başlık<input id="hero_baslik"></label>
           <label class="full">Ana açıklama<textarea id="hero_aciklama"></textarea></label>
           <label class="full">
-            Ana görsel
-            <span class="hint">Önerilen: yatay 1600x1000 veya 1600x1200 px</span>
+            Ana sayfa kapak görseli
+            <span class="hint">Sadece 1 adet kapak fotoğrafı. Önerilen: yatay 1600x1000 veya 1600x1200 px</span>
             <div class="upload-row">
               <input id="hero_gorsel_url" placeholder="Yükleme sonrası URL otomatik gelir">
               <button class="btn dark" type="button" id="heroUploadBtn">Fotoğraf Yükle</button>
             </div>
             <input id="heroUploadFile" type="file" accept="image/*">
-            <img id="heroPreview" class="preview" alt="Ana görsel önizleme">
+            <img id="heroPreview" class="preview" alt="Ana sayfa kapak görseli önizleme">
           </label>
           <button class="btn full" type="submit">Site Ayarlarını Kaydet</button>
         </form>
@@ -128,12 +128,12 @@
             <img id="productPreview" class="preview" alt="Kart görseli önizleme">
           </label>
           <label class="full">
-            Ek görseller / galeri
-            <span class="hint">Her satıra 1 görsel URL. Fotoğraf seçip yükledikçe buraya otomatik eklenir.</span>
+            Ürün ek görselleri / galeri
+            <span class="hint">Birden fazla fotoğraf seçebilirsin. Yüklenen her fotoğraf otomatik olarak listeye eklenir.</span>
             <div class="multi-upload">
               <textarea id="galeri_urls" placeholder="Her satıra bir görsel URL"></textarea>
-              <input id="galleryUploadFile" type="file" accept="image/*">
-              <button class="btn dark" type="button" id="galleryUploadBtn">Galeri Fotoğrafı Yükle</button>
+              <input id="galleryUploadFile" type="file" accept="image/*" multiple>
+              <button class="btn dark" type="button" id="galleryUploadBtn">Seçili Galeri Fotoğraflarını Yükle</button>
             </div>
           </label>
           <label>Buton / fiyat yazısı<input id="fiyat_notu" placeholder="Teklif al"></label>

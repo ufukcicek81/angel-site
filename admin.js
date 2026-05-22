@@ -390,6 +390,7 @@ if (productUploadBtn) {
 
 
 
+
 function bindGalleryUploadButton() {
   const btn = $("galleryUploadBtn");
   const fileInput = $("galleryUploadFile");
@@ -399,36 +400,45 @@ function bindGalleryUploadButton() {
 
   btn.dataset.bound = "1";
   btn.addEventListener("click", async () => {
-    const file = fileInput.files && fileInput.files[0];
+    const files = Array.from(fileInput.files || []);
 
-    if (!file) {
-      alert("Önce Dosya Seç butonundan bir fotoğraf seç.");
+    if (!files.length) {
+      alert("Önce Dosya Seç butonundan bir veya birkaç fotoğraf seç.");
       return;
     }
 
     const oldText = btn.textContent;
-    btn.textContent = "Yükleniyor...";
     btn.disabled = true;
-    msg(msgBox, "Galeri fotoğrafı yükleniyor...");
+    msg(msgBox, `${files.length} fotoğraf yükleniyor...`);
+
+    let success = 0;
+    let failed = 0;
 
     try {
-      const url = await uploadFileToCloudinary(file, msgBox);
-      appendLineToTextarea("galeri_urls", url);
+      for (let i = 0; i < files.length; i++) {
+        btn.textContent = `Yükleniyor ${i + 1}/${files.length}`;
+        try {
+          const url = await uploadFileToCloudinary(files[i], msgBox);
+          appendLineToTextarea("galeri_urls", url);
+          success++;
+        } catch (err) {
+          console.error("Galeri yükleme hatası:", err);
+          failed++;
+        }
+      }
+
       fileInput.value = "";
-      msg(msgBox, "Galeri fotoğrafı eklendi. Şimdi Kartı Kaydet butonuna bas.");
-      alert("Galeri fotoğrafı yüklendi ve listeye eklendi. Şimdi Kartı Kaydet butonuna bas.");
-    } catch (err) {
-      console.error(err);
-      msg(msgBox, "Galeri yükleme hatası: " + err.message);
-      alert("Galeri fotoğrafı yüklenemedi: " + err.message + "\nCloudinary preset Unsigned mı kontrol et.");
+      msg(msgBox, `${success} fotoğraf galeriye eklendi. ${failed ? failed + " fotoğraf yüklenemedi. " : ""}Şimdi Kartı Kaydet butonuna bas.`);
+      alert(`${success} fotoğraf galeriye eklendi. Şimdi Kartı Kaydet butonuna bas.`);
     } finally {
-      btn.textContent = oldText || "Galeri Fotoğrafı Yükle";
+      btn.textContent = oldText || "Seçili Galeri Fotoğraflarını Yükle";
       btn.disabled = false;
     }
   });
 }
 
 bindGalleryUploadButton();
+
 
 onAuthStateChanged(auth, async (user) => {
   const logged = !!user;
