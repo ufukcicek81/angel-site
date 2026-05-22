@@ -119,6 +119,24 @@
     .image-manager{display:grid;gap:14px;margin-top:12px}.image-manager h3{margin:8px 0 0;font-size:18px;color:#f6e5a8}.image-row{display:grid;grid-template-columns:92px 1fr auto;gap:12px;align-items:center;border:1px solid rgba(232,199,119,.18);background:rgba(255,255,255,.035);border-radius:18px;padding:10px}.image-row img{width:92px;height:110px;object-fit:cover;object-position:center top;border-radius:12px;background:#090909}.image-row-title{font-weight:900;color:#fff;margin-bottom:4px}.image-row-url{font-size:11px;color:rgba(255,255,255,.45);word-break:break-all;max-height:36px;overflow:hidden}.image-row button{width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.24);background:#8b1111;color:#fff;font-size:22px;font-weight:900;cursor:pointer}.image-row button:hover{background:#dc2626}.empty-note{border:1px dashed rgba(232,199,119,.22);padding:14px;border-radius:16px;color:rgba(255,255,255,.56)}
     @media(max-width:760px){.image-row{grid-template-columns:78px 1fr auto}.image-row img{width:78px;height:96px}}
 
+  
+    .bulk-product-box{
+      border:1px solid rgba(232,199,119,.22);
+      background:rgba(232,199,119,.06);
+      border-radius:20px;
+      padding:16px;
+      margin:0 0 18px;
+    }
+    .bulk-product-box h3{
+      color:#f6e5a8;
+      font-size:20px;
+      margin-bottom:6px;
+    }
+    .bulk-product-box p{
+      color:rgba(255,255,255,.68);
+      margin-bottom:12px;
+    }
+
   </style>
 </head>
 <body>
@@ -188,6 +206,22 @@
 
       <section class="card">
         <h2>Ürün / Hizmet Kartı</h2>
+        
+        <div class="help-card" id="bulkProductHelp">
+          <strong>Ana sayfa slider sistemi:</strong> Slider, aşağıdaki ürün kartlarından otomatik oluşur.
+          Birden fazla ürün fotoğrafı seçip toplu yüklersen her fotoğraf için ayrı ürün kartı açılır.
+          Müşteri sliderdaki ürüne tıklayınca o ürünün detay sayfasına gider.
+        </div>
+        <div class="bulk-product-box" id="bulkProductBox">
+          <h3>Toplu Ürün Fotoğrafı Yükle</h3>
+          <p>Birden fazla ana ürün fotoğrafı seç. Sistem her fotoğraf için ayrı ürün kartı oluşturur.</p>
+          <input id="bulkProductUploadFile" type="file" accept="image/*" multiple>
+          <div class="toolbar" style="margin-top:10px">
+            <button class="btn" type="button" id="bulkProductUploadBtn">Seçili Fotoğraflardan Ürün Oluştur</button>
+          </div>
+          <div class="msg" id="bulkProductMsg"></div>
+        </div>
+
         <form id="productForm" class="grid">
           <input type="hidden" id="product_id">
           <label>Sıra<input id="sira" type="number" value="1"></label>
@@ -222,7 +256,7 @@
               <textarea id="galeri_urls" placeholder="Her satıra bir görsel URL"></textarea>
               <div class="gallery-preview-grid" id="galleryPreview"></div>
         
-              <input id="galleryUploadFile" type="file" accept="image/*" multiple multiple>
+              <input id="galleryUploadFile" type="file" accept="image/*" multiple>
               <button class="btn dark" type="button" id="galleryUploadBtn">Seçili Galeri Fotoğraflarını Yükle</button>
               <button class="btn dark" type="button" id="clearGalleryBtn">Galeri Listesini Temizle</button>
             </div>

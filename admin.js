@@ -731,3 +731,78 @@ function renderImageManagers(){
 }
 document.addEventListener("DOMContentLoaded",()=>{setupAdminTabs();setTimeout(renderImageManagers,600);});
 document.addEventListener("input",e=>{if(e.target&&(e.target.id==="gorsel_url"||e.target.id==="galeri_urls"))setTimeout(renderImageManagers,50);});
+
+
+
+function bindBulkProductUpload() {
+  const btn = $("bulkProductUploadBtn");
+  const fileInput = $("bulkProductUploadFile");
+  const boxMsg = $("bulkProductMsg");
+
+  if (!btn || !fileInput || btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
+
+  btn.addEventListener("click", async () => {
+    const files = Array.from(fileInput.files || []);
+    if (!files.length) {
+      alert("Önce bir veya birkaç ürün fotoğrafı seç.");
+      return;
+    }
+
+    const oldText = btn.textContent;
+    btn.disabled = true;
+    let success = 0;
+    let failed = 0;
+
+    try {
+      msg(boxMsg, `${files.length} fotoğraf yükleniyor ve ürün kartları oluşturuluyor...`);
+
+      const startOrder = products.length ? Math.max(...products.map(p => Number(p.sira || 0))) + 1 : 1;
+
+      for (let i = 0; i < files.length; i++) {
+        btn.textContent = `Ürün oluşturuluyor ${i + 1}/${files.length}`;
+
+        try {
+          const url = await uploadFileToCloudinary(files[i]);
+          const order = startOrder + i;
+
+          await addDoc(collection(db, "urunler"), {
+            sira: order,
+            aktif: true,
+            ad: `Yeni Tasarım ${order}`,
+            kategori: "Özel Tasarım",
+            aciklama: "Kişiye özel ölçü ve tasarım ile hazırlanır.",
+            gorsel_url: url,
+            galeri_urls: "",
+            kumas_cinsi: "",
+            kalip_model: "",
+            teslim_suresi: "7-14 gün",
+            olcu_bilgisi: "Kişiye özel ölçü alınır",
+            detay_aciklama: "",
+            fiyat_notu: "Detayları İncele",
+            buton_link: "",
+            created_at: serverTimestamp(),
+            updated_at: serverTimestamp()
+          });
+
+          success++;
+        } catch (err) {
+          console.error("Toplu ürün oluşturma hatası:", err);
+          failed++;
+        }
+      }
+
+      fileInput.value = "";
+      await loadProducts();
+      msg(boxMsg, `${success} ürün oluşturuldu. ${failed ? failed + " fotoğraf/ürün başarısız oldu. " : ""}Ürünler ana sayfa sliderına otomatik düşer.`);
+      alert(`${success} ürün oluşturuldu. Ana sayfa sliderında otomatik görünecek.`);
+    } finally {
+      btn.textContent = oldText || "Seçili Fotoğraflardan Ürün Oluştur";
+      btn.disabled = false;
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(bindBulkProductUpload, 400);
+});

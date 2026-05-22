@@ -259,12 +259,12 @@ function renderProducts(products = []) {
     const href = p.buton_link || detailUrl(p.id);
     return `
       <article class="feature">
-        <div class="feature-img" onclick='openGallery(${JSON.stringify(galleryImages)})'>${img ? `<img src="${img}" alt="${title}" loading="lazy" onload="this.classList.add('loaded')">` : ""}</div>
+        <a class="feature-img" href="${href}">${img ? `<img src="${img}" alt="${title}" loading="lazy" onload="this.classList.add(\'loaded\')">` : ""}</a>
         <div class="feature-content">
           <small>${String(index + 1).padStart(2, "0")} / ${cat}</small>
           <h3>${title}</h3>
           <p>${desc}</p>
-          <a class="btn btn-gold" href="${href}" target="_blank">${price}</a>
+          <a class="btn btn-gold" href="${href}">${price}</a>
         </div>
       </article>
     `;
