@@ -6,27 +6,6 @@
   <title>Angel Privé | Kişiye Özel Dikim Kıyafet ve Premium Tasarım</title>
   <meta name="description" content="Angel Privé, kişiye özel dikim kıyafet, özel dikim elbise ve premium tasarım hizmeti sunar. Model, kumaş, renk ve ölçü detayları sana özel planlanır." />
   <link rel="canonical" href="https://angelprive.com/" />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#050505" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Angel Privé | Kişiye Özel Dikim Kıyafet" />
-  <meta property="og:description" content="Kişiye özel dikim kıyafet, özel dikim elbise ve premium tasarım hizmeti." />
-  <meta property="og:url" content="https://angelprive.com/" />
-  <meta property="og:site_name" content="Angel Privé" />
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ClothingStore",
-    "name": "Angel Privé",
-    "url": "https://angelprive.com/",
-    "description": "Kişiye özel dikim kıyafet, özel dikim elbise ve premium tasarım hizmeti.",
-    "areaServed": "Türkiye",
-    "sameAs": []
-  }
-  </script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -396,18 +375,18 @@
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" id="heroSection">
       <div class="hero-inner">
         <div>
-          <div class="eyebrow">Luxury custom clothing</div>
-          <h1>Sana özel dikilen <span>premium kıyafetler</span>.</h1>
-          <p>Angel Privé, hazır ürün satışı yerine tamamen kişiye özel dikim kıyafet tasarlar. Model, kumaş, renk, ölçü ve teslim süreci sana özel planlanır.</p>
+          <div class="eyebrow" id="heroEyebrow">Luxury custom clothing</div>
+          <h1 id="heroTitle">Sana özel dikilen <span>premium kıyafetler</span>.</h1>
+          <p id="heroText">Angel Privé, hazır ürün satışı yerine tamamen kişiye özel dikim kıyafet tasarlar. Model, kumaş, renk, ölçü ve teslim süreci sana özel planlanır.</p>
           <div class="hero-actions">
             <a class="btn btn-gold" href="#siparis">Özel Dikim Talebi Oluştur</a>
-            <a class="btn btn-dark" href="https://wa.me/905000000000" target="_blank">WhatsApp ile Görüş</a>
+            <a class="btn btn-dark" href="https://wa.me/905000000000" target="_blank" class="wa-link">WhatsApp ile Görüş</a>
           </div>
         </div>
-        <div class="hero-visual">
+        <div class="hero-visual" id="heroVisual">
         </div>
       </div>
     </section>
@@ -419,7 +398,7 @@
           <h2>Özel dikim kıyafet hizmeti</h2>
           <p>Bu sitede hazır stok ürün yerine, kişinin isteğine ve ölçüsüne göre özel tasarım kıyafet süreci sunulur.</p>
         </div>
-        <div class="feature-grid">
+        <div class="feature-grid" id="productGrid">
           <article class="feature">
             <div class="feature-img"></div>
             <div class="feature-content">
@@ -523,21 +502,10 @@
           <h2>Angel Privé ile özel dikim sürecini başlat.</h2>
           <p>Model fikrini, referans görselini veya sadece aklındaki tarzı paylaş. Sana özel premium dikim sürecini birlikte planlayalım.</p>
         </div>
-        <a class="btn btn-gold" href="https://wa.me/905000000000" target="_blank">WhatsApp’a Yaz</a>
+        <a class="btn btn-gold" href="https://wa.me/905000000000" target="_blank" class="wa-link">WhatsApp’a Yaz</a>
       </div>
     </section>
   </main>
-
-
-    <section id="seo-bilgi" class="contact" style="padding-top:0;">
-      <div class="container" style="background:#fff;border-radius:24px;padding:34px;box-shadow:0 18px 54px rgba(0,0,0,.08);">
-        <h2 style="font-size:36px;margin-bottom:12px;">Kişiye özel dikim kıyafet</h2>
-        <p style="color:#6f6f6f;max-width:900px;">
-          Angel Privé; özel dikim elbise, özel gün kıyafeti, ölçüye göre dikim ve premium kıyafet tasarımı alanında kişiye özel çözümler sunar.
-          Hazır ürün yerine model, kumaş, renk, ölçü ve kullanım amacına göre sana özel tasarım süreci planlanır.
-        </p>
-      </div>
-    </section>
 
   <footer>
     <div class="foot">
@@ -546,10 +514,12 @@
     </div>
   </footer>
 
-  <a class="wa" href="https://wa.me/905000000000" target="_blank">☎</a>
+  <a class="wa wa-link" href="https://wa.me/905000000000" target="_blank">☎</a>
+
+  <script type="module" src="./app.js"></script>
 
   <script>
-    const WHATSAPP_NUMBER = '905000000000';
+    const WHATSAPP_NUMBER = window.ANGEL_WHATSAPP_NUMBER || '905000000000';
 
     document.getElementById('orderForm').addEventListener('submit', function(e){
       e.preventDefault();
@@ -564,7 +534,7 @@
         "Bütçe: " + encodeURIComponent(document.getElementById('budget').value) + "%0A" +
         "Tasarım Detayı: " + encodeURIComponent(document.getElementById('note').value);
 
-      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + message, "_blank");
+      window.open("https://wa.me/" + (window.ANGEL_WHATSAPP_NUMBER || WHATSAPP_NUMBER) + "?text=" + message, "_blank");
     });
   </script>
 </body>

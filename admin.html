@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angel Privé Admin Panel</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--black:#050505;--gold:#c99a45;--gold2:#e8c777;--cream:#f8f4ec;--line:rgba(232,199,119,.24);--muted:#8b8b8b}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,sans-serif;background:#080808;color:#fff;line-height:1.5}
+    .wrap{width:min(1050px,92%);margin:auto;padding:26px 0 70px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}
+    h1,h2{font-family:'Cormorant Garamond',serif;color:var(--gold2);line-height:1.1}
+    h1{font-size:42px}
+    h2{font-size:30px;margin-bottom:14px}
+    p{color:rgba(255,255,255,.68)}
+    .card{background:#111;border:1px solid var(--line);border-radius:22px;padding:22px;margin:18px 0;box-shadow:0 18px 50px rgba(0,0,0,.24)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    label{display:grid;gap:7px;color:rgba(255,255,255,.82);font-weight:700;font-size:13px}
+    input,textarea,select{width:100%;border:1px solid rgba(232,199,119,.22);background:#050505;color:#fff;border-radius:14px;padding:13px;font:inherit}
+    textarea{min-height:110px;resize:vertical}
+    .full{grid-column:1/-1}
+    .btn{border:0;border-radius:14px;padding:13px 18px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111;font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .btn.dark{background:#050505;color:#fff;border:1px solid var(--line)}
+    .btn.red{background:#431313;color:#ffd1d1;border:1px solid #6a2323}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .hidden{display:none!important}
+    .msg{min-height:24px;color:var(--gold2);margin-top:10px}
+    .product{display:flex;justify-content:space-between;gap:14px;align-items:center;border-top:1px solid rgba(255,255,255,.08);padding:14px 0}
+    .product:first-child{border-top:0}
+    code{word-break:break-all;color:var(--gold2)}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}.top{display:grid}h1{font-size:34px}.card{padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <div>
+        <h1>Angel Privé Admin</h1>
+        <p>Site içeriklerini buradan düzenle.</p>
+      </div>
+      <a class="btn dark" href="./index.html">Siteye Dön</a>
+    </div>
+
+    <section class="card" id="loginCard">
+      <h2>Giriş Yap</h2>
+      <p>Firebase Authentication ile oluşturduğun admin hesabıyla giriş yap.</p>
+      <form id="loginForm" class="grid" style="margin-top:16px">
+        <label>E-posta<input id="email" type="email" required placeholder="admin@mail.com"></label>
+        <label>Şifre<input id="password" type="password" required placeholder="••••••••"></label>
+        <button class="btn full" type="submit">Giriş Yap</button>
+      </form>
+      <div class="msg" id="loginMsg"></div>
+    </section>
+
+    <section id="panel" class="hidden">
+      <section class="card">
+        <div class="toolbar" style="justify-content:space-between">
+          <div>
+            <h2>Oturum</h2>
+            <p>UID: <code id="uidText">-</code></p>
+          </div>
+          <button class="btn dark" id="logoutBtn">Çıkış Yap</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Site Ayarları</h2>
+        <form id="settingsForm" class="grid">
+          <label>Marka adı<input id="marka_adi" placeholder="Angel Privé"></label>
+          <label>WhatsApp numarası<input id="whatsapp_no" placeholder="905xxxxxxxxx"></label>
+          <label class="full">SEO başlığı<input id="site_title"></label>
+          <label class="full">SEO açıklama<textarea id="site_description"></textarea></label>
+          <label>Üst küçük yazı<input id="hero_etiket"></label>
+          <label>Başlıkta vurgulanacak kelime<input id="hero_vurgu" placeholder="premium kıyafetler"></label>
+          <label class="full">Ana başlık<input id="hero_baslik"></label>
+          <label class="full">Ana açıklama<textarea id="hero_aciklama"></textarea></label>
+          <label class="full">Ana görsel URL<input id="hero_gorsel_url" placeholder="https://..."></label>
+          <button class="btn full" type="submit">Site Ayarlarını Kaydet</button>
+        </form>
+        <div class="msg" id="settingsMsg"></div>
+      </section>
+
+      <section class="card">
+        <h2>Ürün / Hizmet Kartı</h2>
+        <form id="productForm" class="grid">
+          <input type="hidden" id="product_id">
+          <label>Sıra<input id="sira" type="number" value="1"></label>
+          <label>Durum<select id="aktif"><option value="true">Aktif</option><option value="false">Pasif</option></select></label>
+          <label>Başlık<input id="ad" placeholder="Özel Dikim Elbise"></label>
+          <label>Kategori<input id="kategori" placeholder="Tasarım"></label>
+          <label class="full">Açıklama<textarea id="aciklama"></textarea></label>
+          <label class="full">Görsel URL<input id="gorsel_url" placeholder="https://..."></label>
+          <label>Buton / fiyat yazısı<input id="fiyat_notu" placeholder="Teklif al"></label>
+          <label>Buton linki<input id="buton_link" placeholder="Boş kalırsa WhatsApp"></label>
+          <div class="toolbar full">
+            <button class="btn" type="submit">Kartı Kaydet</button>
+            <button class="btn dark" type="button" id="clearProduct">Formu Temizle</button>
+          </div>
+        </form>
+        <div class="msg" id="productMsg"></div>
+      </section>
+
+      <section class="card">
+        <h2>Mevcut Kartlar</h2>
+        <div id="productList"></div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>
