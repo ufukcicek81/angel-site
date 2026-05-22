@@ -18,6 +18,10 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+const CLOUDINARY_CLOUD_NAME = "dnnpbmenh";
+const CLOUDINARY_UPLOAD_PRESET = "angelprive_upload";
+
 const $ = (id) => document.getElementById(id);
 
 const refs = {
@@ -68,6 +72,11 @@ async function loadSettings() {
   setVal("hero_baslik", d.hero_baslik || "Sana özel dikilen premium kıyafetler.");
   setVal("hero_aciklama", d.hero_aciklama || "Angel Privé, hazır ürün satışı yerine tamamen kişiye özel dikim kıyafet tasarlar. Model, kumaş, renk, ölçü ve teslim süreci sana özel planlanır.");
   setVal("hero_gorsel_url", d.hero_gorsel_url || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80");
+  const heroPreview = $("heroPreview");
+  if (heroPreview && val("hero_gorsel_url")) {
+    heroPreview.src = val("hero_gorsel_url");
+    heroPreview.style.display = "block";
+  }
 }
 
 async function loadProducts() {
@@ -107,10 +116,67 @@ function clearProductForm() {
   setVal("kategori", "");
   setVal("aciklama", "");
   setVal("gorsel_url", "");
+  const productPreview = $("productPreview");
+  if (productPreview) {
+    productPreview.src = "";
+    productPreview.style.display = "none";
+  }
   setVal("fiyat_notu", "Teklif al");
   setVal("buton_link", "");
   setVal("aktif", "true");
 }
+
+
+async function uploadToCloudinary(file, targetInputId, previewId, buttonEl) {
+  if (!file) {
+    alert("Önce bir fotoğraf seç.");
+    return;
+  }
+
+  const oldText = buttonEl ? buttonEl.textContent : "";
+  if (buttonEl) {
+    buttonEl.textContent = "Yükleniyor...";
+    buttonEl.disabled = true;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    formData.append("folder", "angelprive");
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.secure_url) {
+      console.error(data);
+      throw new Error(data.error?.message || "Cloudinary yükleme hatası");
+    }
+
+    setVal(targetInputId, data.secure_url);
+
+    const preview = $(previewId);
+    if (preview) {
+      preview.src = data.secure_url;
+      preview.style.display = "block";
+    }
+
+    alert("Fotoğraf yüklendi. Şimdi Kaydet butonuna bas.");
+  } catch (err) {
+    console.error(err);
+    alert("Fotoğraf yüklenemedi. Upload preset Unsigned mı kontrol et. Hata: " + err.message);
+  } finally {
+    if (buttonEl) {
+      buttonEl.textContent = oldText || "Fotoğraf Yükle";
+      buttonEl.disabled = false;
+    }
+  }
+}
+
 
 refs.loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -198,6 +264,11 @@ refs.productList.addEventListener("click", async (e) => {
     setVal("kategori", p.kategori || "");
     setVal("aciklama", p.aciklama || "");
     setVal("gorsel_url", p.gorsel_url || "");
+    const productPreview = $("productPreview");
+    if (productPreview && p.gorsel_url) {
+      productPreview.src = p.gorsel_url;
+      productPreview.style.display = "block";
+    }
     setVal("fiyat_notu", p.fiyat_notu || p.buton_text || "Teklif al");
     setVal("buton_link", p.buton_link || "");
     setVal("aktif", p.aktif === false ? "false" : "true");
@@ -210,6 +281,22 @@ refs.productList.addEventListener("click", async (e) => {
     await loadProducts();
   }
 });
+
+
+const heroUploadBtn = $("heroUploadBtn");
+if (heroUploadBtn) {
+  heroUploadBtn.addEventListener("click", () => {
+    uploadToCloudinary($("heroUploadFile")?.files?.[0], "hero_gorsel_url", "heroPreview", heroUploadBtn);
+  });
+}
+
+const productUploadBtn = $("productUploadBtn");
+if (productUploadBtn) {
+  productUploadBtn.addEventListener("click", () => {
+    uploadToCloudinary($("productUploadFile")?.files?.[0], "gorsel_url", "productPreview", productUploadBtn);
+  });
+}
+
 
 onAuthStateChanged(auth, async (user) => {
   const logged = !!user;

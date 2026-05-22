@@ -32,6 +32,12 @@
     .product:first-child{border-top:0}
     code{word-break:break-all;color:var(--gold2)}
     @media(max-width:720px){.grid{grid-template-columns:1fr}.top{display:grid}h1{font-size:34px}.card{padding:18px}}
+  
+    .upload-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .hint{color:var(--gold);font-size:12px;font-weight:600}
+    input[type="file"]{padding:10px;background:#0b0b0b}
+    .preview{margin-top:10px;max-width:180px;border-radius:14px;border:1px solid var(--line);display:none}
+
   </style>
 </head>
 <body>
@@ -77,7 +83,16 @@
           <label>Başlıkta vurgulanacak kelime<input id="hero_vurgu" placeholder="premium kıyafetler"></label>
           <label class="full">Ana başlık<input id="hero_baslik"></label>
           <label class="full">Ana açıklama<textarea id="hero_aciklama"></textarea></label>
-          <label class="full">Ana görsel URL <small style="color:#c99a45">Önerilen: yatay 1600x1000 veya 1600x1200 px</small><input id="hero_gorsel_url" placeholder="https://..."></label>
+          <label class="full">
+            Ana görsel
+            <span class="hint">Önerilen: yatay 1600x1000 veya 1600x1200 px</span>
+            <div class="upload-row">
+              <input id="hero_gorsel_url" placeholder="Yükleme sonrası URL otomatik gelir">
+              <button class="btn dark" type="button" id="heroUploadBtn">Fotoğraf Yükle</button>
+            </div>
+            <input id="heroUploadFile" type="file" accept="image/*">
+            <img id="heroPreview" class="preview" alt="Ana görsel önizleme">
+          </label>
           <button class="btn full" type="submit">Site Ayarlarını Kaydet</button>
         </form>
         <div class="msg" id="settingsMsg"></div>
@@ -92,7 +107,16 @@
           <label>Başlık<input id="ad" placeholder="Özel Dikim Elbise"></label>
           <label>Kategori<input id="kategori" placeholder="Tasarım"></label>
           <label class="full">Açıklama<textarea id="aciklama"></textarea></label>
-          <label class="full">Görsel URL <small style="color:#c99a45">Önerilen: dikey 900x1200 px, kıyafet ortada olsun</small><input id="gorsel_url" placeholder="https://..."></label>
+          <label class="full">
+            Kart görseli
+            <span class="hint">Önerilen: dikey 900x1200 px, kıyafet ortada ve biraz boşluklu olsun</span>
+            <div class="upload-row">
+              <input id="gorsel_url" placeholder="Yükleme sonrası URL otomatik gelir">
+              <button class="btn dark" type="button" id="productUploadBtn">Fotoğraf Yükle</button>
+            </div>
+            <input id="productUploadFile" type="file" accept="image/*">
+            <img id="productPreview" class="preview" alt="Kart görseli önizleme">
+          </label>
           <label>Buton / fiyat yazısı<input id="fiyat_notu" placeholder="Teklif al"></label>
           <label>Buton linki<input id="buton_link" placeholder="Boş kalırsa WhatsApp"></label>
           <div class="toolbar full">
