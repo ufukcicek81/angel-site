@@ -988,7 +988,196 @@
       }
     }
 
-  </style>
+  
+    /* Mobil slider premium tam ekran düzeni */
+    @media(max-width:720px){
+      .mobile-showcase-head{
+        display:none !important;
+      }
+
+      .mobile-product-showcase{
+        padding:12px 0 10px !important;
+        background:#050505 !important;
+        border-top:1px solid rgba(232,199,119,.10) !important;
+      }
+
+      .mobile-product-slider{
+        padding:0 0 14px !important;
+        gap:12px !important;
+        scroll-padding:0 !important;
+      }
+
+      .mobile-slide{
+        flex:0 0 100vw !important;
+        width:100vw !important;
+        height:calc(100vh - 235px) !important;
+        min-height:520px !important;
+        max-height:720px !important;
+        border-radius:0 !important;
+        border-left:0 !important;
+        border-right:0 !important;
+        box-shadow:none !important;
+      }
+
+      .mobile-slide img{
+        width:100% !important;
+        height:100% !important;
+        object-fit:cover !important;
+        object-position:center top !important;
+      }
+
+      .mobile-slide-info{
+        left:18px !important;
+        right:18px !important;
+        bottom:18px !important;
+        border-radius:24px !important;
+        padding:16px 18px !important;
+      }
+
+      .mobile-slide-info small{
+        font-size:10px !important;
+        letter-spacing:.22em !important;
+      }
+
+      .mobile-slide-info strong{
+        font-size:30px !important;
+      }
+
+      .mobile-slide-info span{
+        font-size:14px !important;
+      }
+
+      .hero{
+        padding-top:6px !important;
+      }
+    }
+
+  
+
+    /* Masaüstünde ana görseli ekranın büyük kısmını kaplayan premium hero */
+    @media(min-width:981px){
+      .hero{
+        padding:18px 0 34px !important;
+        background:
+          radial-gradient(circle at 76% 22%,rgba(201,154,69,.16),transparent 22%),
+          linear-gradient(90deg,#040404 0%,#0b0b0b 56%,#17110c 100%) !important;
+      }
+      .hero-inner{
+        width:min(1400px,94%) !important;
+        display:grid !important;
+        grid-template-columns:1fr !important;
+        min-height:84vh !important;
+        height:auto !important;
+        position:relative !important;
+        align-items:stretch !important;
+        gap:0 !important;
+        padding:0 0 16px !important;
+      }
+      .hero-inner > div:first-child{
+        grid-area:1 / 1 !important;
+        position:relative !important;
+        z-index:3 !important;
+        align-self:end !important;
+        max-width:640px !important;
+        padding:0 0 58px 58px !important;
+      }
+      .hero-visual{
+        grid-area:1 / 1 !important;
+        position:relative !important;
+        min-height:84vh !important;
+        height:84vh !important;
+        width:100% !important;
+        margin-top:22px !important;
+        border-radius:36px !important;
+        overflow:hidden !important;
+        border:1px solid rgba(232,199,119,.16) !important;
+        box-shadow:0 42px 120px rgba(0,0,0,.42) !important;
+      }
+      .hero-visual::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background:
+          linear-gradient(90deg,rgba(0,0,0,.80) 0%,rgba(0,0,0,.54) 36%,rgba(0,0,0,.14) 58%,rgba(0,0,0,.06) 100%),
+          linear-gradient(to top,rgba(0,0,0,.42),rgba(0,0,0,.05) 42%,rgba(0,0,0,.08));
+        z-index:1;
+        pointer-events:none;
+      }
+      .hero-image{
+        position:absolute !important;
+        inset:0 !important;
+        width:100% !important;
+        height:100% !important;
+        object-fit:cover !important;
+        object-position:center top !important;
+        display:block !important;
+      }
+      .hero-product-badge{
+        z-index:3 !important;
+        left:auto !important;
+        right:28px !important;
+        bottom:28px !important;
+        width:min(420px,34vw) !important;
+        padding:18px 20px !important;
+        border-radius:24px !important;
+        background:linear-gradient(135deg,rgba(0,0,0,.72),rgba(0,0,0,.34)) !important;
+        border:1px solid rgba(232,199,119,.34) !important;
+        backdrop-filter:blur(12px) !important;
+      }
+      .hero-product-badge strong{
+        font-size:48px !important;
+        line-height:.96 !important;
+      }
+      .hero-product-badge span{
+        font-size:14px !important;
+      }
+      .eyebrow{
+        margin-bottom:12px !important;
+        font-size:13px !important;
+        letter-spacing:.35em !important;
+      }
+      #heroTitle{
+        max-width:640px !important;
+        font-size:clamp(66px,6.2vw,92px) !important;
+        line-height:.92 !important;
+        margin-bottom:18px !important;
+        text-shadow:0 14px 44px rgba(0,0,0,.34) !important;
+      }
+      #heroText{
+        max-width:560px !important;
+        font-size:18px !important;
+        line-height:1.8 !important;
+        color:rgba(255,255,255,.84) !important;
+        margin-bottom:24px !important;
+      }
+      .hero-actions{
+        gap:16px !important;
+      }
+      .hero-actions .btn{
+        min-width:214px !important;
+        padding:16px 28px !important;
+        border-radius:18px !important;
+        font-size:15px !important;
+      }
+    }
+
+    @media(min-width:721px) and (max-width:980px){
+      .hero-inner{
+        grid-template-columns:1fr 1.2fr !important;
+        align-items:center !important;
+      }
+      .hero-visual{
+        min-height:620px !important;
+        height:620px !important;
+      }
+      .hero-image{
+        width:100% !important;
+        height:100% !important;
+        object-fit:cover !important;
+      }
+    }
+
+</style>
 </head>
 <body>
   <header class="nav">
