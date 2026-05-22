@@ -115,6 +115,11 @@ function clearProductForm() {
   setVal("ad", "");
   setVal("kategori", "");
   setVal("aciklama", "");
+  setVal("detay_aciklama", "");
+  setVal("olcu_bilgisi", "");
+  setVal("teslim_suresi", "");
+  setVal("kalip_model", "");
+  setVal("kumas_cinsi", "");
   setVal("gorsel_url", "");
   setVal("galeri_urls", "");
   const productPreview = $("productPreview");
@@ -179,6 +184,37 @@ async function uploadToCloudinary(file, targetInputId, previewId, buttonEl) {
 }
 
 
+
+async function uploadFileToCloudinary(file, statusElement = null) {
+  if (!file) throw new Error("Önce bir fotoğraf seç.");
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  formData.append("folder", "angelprive");
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.secure_url) {
+    console.error("Cloudinary hata:", data);
+    throw new Error(data?.error?.message || "Cloudinary yükleme hatası");
+  }
+
+  return data.secure_url;
+}
+
+function appendLineToTextarea(id, line) {
+  const el = $(id);
+  if (!el) return;
+  const current = (el.value || "").trim();
+  el.value = current ? current + "\n" + line : line;
+}
+
 refs.loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   msg(refs.loginMsg, "Giriş yapılıyor...");
@@ -228,6 +264,11 @@ refs.productForm.addEventListener("submit", async (e) => {
       ad: val("ad"),
       slug: slugify(val("ad")),
       kategori: val("kategori"),
+      kumas_cinsi: val("kumas_cinsi"),
+      kalip_model: val("kalip_model"),
+      teslim_suresi: val("teslim_suresi"),
+      olcu_bilgisi: val("olcu_bilgisi"),
+      detay_aciklama: val("detay_aciklama"),
       aciklama: val("aciklama"),
       gorsel_url: val("gorsel_url"),
       galeri_urls: val("galeri_urls"),
@@ -265,6 +306,12 @@ refs.productList.addEventListener("click", async (e) => {
     setVal("ad", p.ad || "");
     setVal("kategori", p.kategori || "");
     setVal("aciklama", p.aciklama || "");
+    setVal("kumas_cinsi", p.kumas_cinsi || "");
+    setVal("kalip_model", p.kalip_model || "");
+    setVal("teslim_suresi", p.teslim_suresi || "");
+    setVal("olcu_bilgisi", p.olcu_bilgisi || "");
+    setVal("detay_aciklama", p.detay_aciklama || "");
+
     setVal("gorsel_url", p.gorsel_url || "");
     setVal("galeri_urls", p.galeri_urls || "");
     const productPreview = $("productPreview");
@@ -341,6 +388,47 @@ if (productUploadBtn) {
   });
 }
 
+
+
+function bindGalleryUploadButton() {
+  const btn = $("galleryUploadBtn");
+  const fileInput = $("galleryUploadFile");
+  const msgBox = refs.productMsg;
+
+  if (!btn || !fileInput || btn.dataset.bound === "1") return;
+
+  btn.dataset.bound = "1";
+  btn.addEventListener("click", async () => {
+    const file = fileInput.files && fileInput.files[0];
+
+    if (!file) {
+      alert("Önce Dosya Seç butonundan bir fotoğraf seç.");
+      return;
+    }
+
+    const oldText = btn.textContent;
+    btn.textContent = "Yükleniyor...";
+    btn.disabled = true;
+    msg(msgBox, "Galeri fotoğrafı yükleniyor...");
+
+    try {
+      const url = await uploadFileToCloudinary(file, msgBox);
+      appendLineToTextarea("galeri_urls", url);
+      fileInput.value = "";
+      msg(msgBox, "Galeri fotoğrafı eklendi. Şimdi Kartı Kaydet butonuna bas.");
+      alert("Galeri fotoğrafı yüklendi ve listeye eklendi. Şimdi Kartı Kaydet butonuna bas.");
+    } catch (err) {
+      console.error(err);
+      msg(msgBox, "Galeri yükleme hatası: " + err.message);
+      alert("Galeri fotoğrafı yüklenemedi: " + err.message + "\nCloudinary preset Unsigned mı kontrol et.");
+    } finally {
+      btn.textContent = oldText || "Galeri Fotoğrafı Yükle";
+      btn.disabled = false;
+    }
+  });
+}
+
+bindGalleryUploadButton();
 
 onAuthStateChanged(auth, async (user) => {
   const logged = !!user;

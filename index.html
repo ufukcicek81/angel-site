@@ -618,6 +618,76 @@
       border-color:var(--gold2);
     }
 
+  
+    /* Ürün detay yönlendirme */
+    .hero-visual{cursor:pointer}
+    .hero-visual:after{
+      content:"Ürünü incele";
+      position:absolute;
+      left:18px;
+      bottom:18px;
+      background:rgba(0,0,0,.72);
+      color:#fff;
+      border:1px solid rgba(232,199,119,.45);
+      border-radius:999px;
+      padding:9px 14px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+      opacity:.95;
+    }
+
+  
+    /* Ana görsel ürün etiketi */
+    .hero-product-badge{
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      z-index:3;
+      background:linear-gradient(135deg,rgba(0,0,0,.78),rgba(0,0,0,.48));
+      border:1px solid rgba(232,199,119,.38);
+      border-radius:22px;
+      padding:14px 16px;
+      color:#fff;
+      backdrop-filter:blur(10px);
+      box-shadow:0 18px 50px rgba(0,0,0,.28);
+    }
+    .hero-product-badge small{
+      display:block;
+      color:var(--gold2);
+      font-weight:900;
+      letter-spacing:.22em;
+      font-size:11px;
+      margin-bottom:5px;
+      text-transform:uppercase;
+    }
+    .hero-product-badge strong{
+      display:block;
+      font-family:'Cormorant Garamond',serif;
+      font-size:28px;
+      line-height:1;
+      color:#fff;
+      margin-bottom:7px;
+    }
+    .hero-product-badge span{
+      color:rgba(255,255,255,.78);
+      font-size:13px;
+      font-weight:800;
+    }
+    @media(max-width:720px){
+      .hero-product-badge{
+        left:14px;
+        right:14px;
+        bottom:14px;
+        padding:12px 14px;
+        border-radius:18px;
+      }
+      .hero-product-badge strong{
+        font-size:24px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -640,6 +710,11 @@
           </div>
         </div>
         <div class="hero-visual" id="heroVisual"><img id="heroImage" class="hero-image" alt="Angel Privé özel dikim kıyafet görseli">
+          <div class="hero-product-badge" id="heroProductBadge">
+            <small id="heroProductCategory">ÖZEL DİKİM</small>
+            <strong id="heroProductName">Özel Dikim Elbise</strong>
+            <span>Detayları incele →</span>
+          </div>
         </div>
       </div>
     </section>
