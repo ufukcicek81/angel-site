@@ -714,6 +714,30 @@
       }
     }
 
+  
+    /* Mobilde gerçek sıralama: logo -> ana ürün görseli -> başlık */
+    @media(max-width:720px){
+      .hero-inner{
+        display:flex !important;
+        flex-direction:column !important;
+        gap:18px !important;
+      }
+      .hero-inner > *:has(#heroEyebrow),
+      .hero-copy{
+        order:2 !important;
+      }
+      #heroVisual,
+      .hero-visual{
+        order:1 !important;
+        width:100% !important;
+        min-height:455px !important;
+        margin:0 0 4px !important;
+      }
+      #heroTitle{
+        margin-top:0 !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -903,6 +927,22 @@
       <div class="gallery-thumbs" id="galleryThumbs"></div>
     </div>
   </div>
+
+
+  <script>
+    (function(){
+      function moveHeroVisualMobile(){
+        var hero = document.querySelector('.hero-inner');
+        var visual = document.getElementById('heroVisual');
+        if(!hero || !visual || window.innerWidth > 720) return;
+        if(hero.firstElementChild !== visual){
+          hero.insertBefore(visual, hero.firstElementChild);
+        }
+      }
+      document.addEventListener('DOMContentLoaded', moveHeroVisualMobile);
+      window.addEventListener('resize', moveHeroVisualMobile);
+    })();
+  </script>
 
 </body>
 </html>
