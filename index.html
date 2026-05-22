@@ -365,6 +365,37 @@
       .contact h2,.order-info h2{font-size:34px}
       .foot{display:grid;text-align:center;justify-content:center}
     }
+  
+    /* Fotoğraf görünüm düzeltmeleri */
+    .feature-grid{
+      grid-template-columns:repeat(auto-fit, minmax(280px, 360px)) !important;
+      justify-content:center !important;
+      align-items:start;
+    }
+    .feature{
+      width:100%;
+      max-width:360px;
+    }
+    .feature-img{
+      height:420px !important;
+      background-size:cover !important;
+      background-position:center top !important;
+    }
+    .hero-visual{
+      background-position:center top !important;
+    }
+    @media(max-width:720px){
+      .feature-grid{
+        grid-template-columns:1fr !important;
+      }
+      .feature{
+        max-width:100%;
+      }
+      .feature-img{
+        height:430px !important;
+      }
+    }
+
   </style>
 </head>
 <body>

@@ -73,7 +73,7 @@ function renderSettings(data = {}) {
   const visual = qs("#heroVisual");
   if (visual && currentSettings.hero_gorsel_url) {
     visual.style.background =
-      `linear-gradient(rgba(0,0,0,.08),rgba(0,0,0,.46)), url('${currentSettings.hero_gorsel_url}') center/cover`;
+      `linear-gradient(rgba(0,0,0,.08),rgba(0,0,0,.46)), url('${currentSettings.hero_gorsel_url}') center top/cover`;
   }
 
   qsa(".wa-link").forEach(link => {
@@ -106,7 +106,7 @@ function renderProducts(products = []) {
     const href = p.buton_link || waUrl(`${p.ad || "Özel dikim kıyafet"} hakkında bilgi almak istiyorum.`);
     return `
       <article class="feature">
-        <div class="feature-img" style="background-image:url('${img}')"></div>
+        <div class="feature-img" style="background-image:url('${img}');background-position:center top;background-size:cover;"></div>
         <div class="feature-content">
           <small>${String(index + 1).padStart(2, "0")} / ${cat}</small>
           <h3>${title}</h3>
