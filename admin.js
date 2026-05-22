@@ -122,6 +122,7 @@ function clearProductForm() {
   setVal("kumas_cinsi", "");
   setVal("gorsel_url", "");
   setVal("galeri_urls", "");
+  renderAllImagePreviews();
   const productPreview = $("productPreview");
   if (productPreview) {
     productPreview.src = "";
@@ -420,6 +421,7 @@ function bindGalleryUploadButton() {
         try {
           const url = await uploadFileToCloudinary(files[i], msgBox);
           appendLineToTextarea("galeri_urls", url);
+          renderGalleryPreview();
           success++;
         } catch (err) {
           console.error("Galeri yükleme hatası:", err);
@@ -469,6 +471,7 @@ function bindImageCleanButtons() {
     clearProduct.addEventListener("click", () => {
       if (!confirm("Bu ürünün ana görseli temizlensin mi? Sonra Kartı Kaydet demen gerekir.")) return;
       setVal("gorsel_url", "");
+      renderProductImagePreview();
       msg(refs.productMsg, "Ürün ana görseli temizlendi. Kalıcı olması için Kartı Kaydet.");
     });
   }
@@ -479,6 +482,7 @@ function bindImageCleanButtons() {
     clearGallery.addEventListener("click", () => {
       if (!confirm("Bu ürünün galeri görsel listesi tamamen temizlensin mi? Sonra Kartı Kaydet demen gerekir.")) return;
       setVal("galeri_urls", "");
+      renderGalleryPreview();
       msg(refs.productMsg, "Galeri listesi temizlendi. Kalıcı olması için Kartı Kaydet.");
     });
   }
@@ -541,6 +545,7 @@ function bindSeparatedUploads() {
       try {
         const url = await uploadFileToCloudinary(file);
         setVal("gorsel_url", url);
+        renderProductImagePreview();
         productFile.value = "";
         msg(refs.productMsg, "Ürün ana görseli yüklendi. Kalıcı olması için Kartı Kaydet.");
       } catch (err) {
@@ -584,6 +589,7 @@ function bindGalleryUploadButtonFixed() {
         try {
           const url = await uploadFileToCloudinary(files[i]);
           appendLineToTextarea("galeri_urls", url);
+          renderGalleryPreview();
           success++;
         } catch (err) {
           console.error(err);
@@ -605,4 +611,91 @@ document.addEventListener("DOMContentLoaded", () => {
   bindImageCleanButtons();
   bindSeparatedUploads();
   bindGalleryUploadButtonFixed();
+});
+
+
+
+function parseImageLines(value) {
+  if (!value) return [];
+  return String(value)
+    .split(/\n|,/)
+    .map(x => x.trim())
+    .filter(Boolean);
+}
+
+function renderProductImagePreview() {
+  const box = $("productImagePreview");
+  if (!box) return;
+
+  const url = val("gorsel_url");
+  if (!url) {
+    box.innerHTML = `<div class="image-preview-empty">Ürün ana görseli yok.</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="image-preview-item single">
+      <button class="image-preview-remove" type="button" id="removeProductImagePreview">×</button>
+      <img src="${url}" alt="Ürün ana görseli">
+    </div>
+  `;
+
+  const btn = $("removeProductImagePreview");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      if (!confirm("Ürün ana görseli kaldırılsın mı? Sonra Kartı Kaydet demen gerekir.")) return;
+      setVal("gorsel_url", "");
+      renderProductImagePreview();
+      msg(refs.productMsg, "Ürün ana görseli kaldırıldı. Kalıcı olması için Kartı Kaydet.");
+    });
+  }
+}
+
+function renderGalleryPreview() {
+  const box = $("galleryPreview");
+  if (!box) return;
+
+  const images = parseImageLines(val("galeri_urls"));
+
+  if (!images.length) {
+    box.innerHTML = `<div class="image-preview-empty">Galeri görseli yok.</div>`;
+    return;
+  }
+
+  box.innerHTML = images.map((url, index) => `
+    <div class="image-preview-item">
+      <button class="image-preview-remove" type="button" data-remove-gallery="${index}">×</button>
+      <img src="${url}" alt="Galeri görseli ${index + 1}">
+    </div>
+  `).join("");
+
+  box.querySelectorAll("[data-remove-gallery]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const index = Number(btn.dataset.removeGallery);
+      const list = parseImageLines(val("galeri_urls"));
+      if (!list[index]) return;
+
+      if (!confirm("Bu galeri fotoğrafı kaldırılsın mı? Sonra Kartı Kaydet demen gerekir.")) return;
+
+      list.splice(index, 1);
+      setVal("galeri_urls", list.join("\\n"));
+      renderGalleryPreview();
+      msg(refs.productMsg, "Galeri fotoğrafı kaldırıldı. Kalıcı olması için Kartı Kaydet.");
+    });
+  });
+}
+
+function renderAllImagePreviews() {
+  renderProductImagePreview();
+  renderGalleryPreview();
+}
+
+document.addEventListener("input", (e) => {
+  if (e.target && (e.target.id === "gorsel_url" || e.target.id === "galeri_urls")) {
+    renderAllImagePreviews();
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(renderAllImagePreviews, 400);
 });
