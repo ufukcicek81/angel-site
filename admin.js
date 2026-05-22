@@ -71,7 +71,7 @@ async function loadSettings() {
   setVal("hero_vurgu", d.hero_vurgu || "premium kıyafetler");
   setVal("hero_baslik", d.hero_baslik || "Sana özel dikilen premium kıyafetler.");
   setVal("hero_aciklama", d.hero_aciklama || "Angel Privé, hazır ürün satışı yerine tamamen kişiye özel dikim kıyafet tasarlar. Model, kumaş, renk, ölçü ve teslim süreci sana özel planlanır.");
-  setVal("hero_gorsel_url", d.hero_gorsel_url || "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80");
+  setVal("hero_gorsel_url", d.hero_gorsel_url || "");
   const heroPreview = $("heroPreview");
   if (heroPreview && val("hero_gorsel_url")) {
     heroPreview.src = val("hero_gorsel_url");

@@ -15,7 +15,7 @@ const DEFAULTS = {
   hero_baslik: "Sana özel dikilen premium kıyafetler.",
   hero_vurgu: "premium kıyafetler",
   hero_aciklama: "Angel Privé, hazır ürün satışı yerine tamamen kişiye özel dikim kıyafet tasarlar. Model, kumaş, renk, ölçü ve teslim süreci sana özel planlanır.",
-  hero_gorsel_url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
+  hero_gorsel_url: "",
   whatsapp_no: "905000000000"
 };
 
@@ -102,11 +102,11 @@ function renderProducts(products = []) {
     const cat = safe(p.kategori || "Özel Dikim");
     const desc = safe(p.aciklama || "Kişiye özel ölçü ve tasarım ile hazırlanır.");
     const price = safe(p.fiyat_notu || p.buton_text || "Bilgi Al");
-    const img = p.gorsel_url || "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80";
+    const img = p.gorsel_url || "";
     const href = p.buton_link || waUrl(`${p.ad || "Özel dikim kıyafet"} hakkında bilgi almak istiyorum.`);
     return `
       <article class="feature">
-        <div class="feature-img" style="background-image:url('${img}');background-position:center top;background-size:cover;"></div>
+        <div class="feature-img ${img ? "has-image" : ""}" style="${img ? `background-image:url('${img}');background-position:center top;background-size:cover;` : ""}"></div>
         <div class="feature-content">
           <small>${String(index + 1).padStart(2, "0")} / ${cat}</small>
           <h3>${title}</h3>
